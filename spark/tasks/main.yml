@@ -1,0 +1,45 @@
+---
+# tasks file for spark
+
+- block:
+
+  - name: Create '{{ spark.group }}' user group
+    group:
+      name: "{{ spark.group }}"
+      state: present
+
+  - name: Create '{{ spark.user }}' user
+    user:
+      name: "{{ spark.user }}"
+      group: "{{ spark.group }}"
+
+  - name: Create spark installation directory
+    file:
+      path: "{{ spark.install_dir }}"
+      state: directory
+
+  - name: Download and extract spark
+    unarchive:
+      src: "{{ spark.download_url }}"
+      dest: "{{ spark.install_dir }}"
+      owner: "{{ spark.user }}"
+      group: "{{ spark.group }}"
+      remote_src: yes
+
+  - name: Create Symlink in path
+    file:
+      dest: "/usr/local/sbin/spark"
+      src: "{{ spark.install_dir }}/{{ spark_release }}-bin-hadoop2.7/bin"
+      owner: "{{ spark.user }}"
+      group: "{{ spark.group }}"
+      state: link
+
+  - name: add spark bin dir to path
+    lineinfile:
+      dest: "/etc/environment"
+      state: present
+      regexp: "-bin-hadoop2.7"
+      line: "PATH=$PATH:{{ spark.install_dir }}/{{ spark_release }}-bin-hadoop2.7/bin"
+
+  tags:
+    - spark_install

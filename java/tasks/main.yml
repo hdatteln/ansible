@@ -1,0 +1,11 @@
+---
+# tasks file for java
+- block:
+
+    - name: Yum install Java
+      yum:
+        name: "{{ java_version }}"
+        state: present
+
+  tags:
+    - java_install

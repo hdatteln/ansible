@@ -1,0 +1,11 @@
+---
+# tasks file for scala
+- block:
+
+    - name: Yum install Scala from www.scala-lang.org
+      yum:
+        name: "http://www.scala-lang.org/files/archive/scala-{{ scala_version }}.rpm"
+        state: present
+
+  tags:
+    - scala_install
