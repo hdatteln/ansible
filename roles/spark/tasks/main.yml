@@ -26,14 +26,6 @@
       group: "{{ spark.group }}"
       remote_src: yes
 
-  - name: Create Symlink in path
-    file:
-      dest: "/usr/local/sbin/spark"
-      src: "{{ spark.install_dir }}/{{ spark_release }}-bin-hadoop2.7/bin"
-      owner: "{{ spark.user }}"
-      group: "{{ spark.group }}"
-      state: link
-
   - name: Templatize '{{ spark.user }}' bash_profile
     template:
       src: "bash_profile.j2"
