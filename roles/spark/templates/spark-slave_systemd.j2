@@ -1,0 +1,16 @@
+[Unit]
+Description=Spark Slave Service
+Wants=network.target network-online.target
+After=network.target network-online.target
+
+[Service]
+Type=forking
+User={{ spark.user }}
+Group={{ spark.group }}
+WorkingDirectory={{ spark.install_dir }}/{{ spark_release }}-bin-hadoop2.7/work
+ExecStart={{ spark.install_dir }}/{{ spark_release }}-bin-hadoop2.7/sbin/start-slave.sh spark://{{ spark.master.host }}:{{ spark.master.port }}
+ExecStop={{ spark.install_dir }}/{{ spark_release }}-bin-hadoop2.7/sbin/stop-slave.sh
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

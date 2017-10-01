@@ -34,13 +34,22 @@
       group: "{{ spark.group }}"
       state: link
 
-  - name: Update '{{ spark.user }}' bash_profile
+  - name: Templatize '{{ spark.user }}' bash_profile
     template:
       src: "bash_profile.j2"
       dest: "/home/{{ spark.user }}/.bash_profile"
       owner: "{{ spark.user }}"
       group: "{{ spark.user }}"
       mode: '0600'
+
+  - name: Templatize spark systemd service
+    template:
+      src: "spark-{{ spark.mode }}_systemd.j2"
+      dest: "/etc/systemd/system/spark-{{ spark.mode }}.service"
+      owner: "{{ spark.user }}"
+      group: "{{ spark.user }}"
+      mode: '0600'
+    notify: restart spark-{{ spark.mode }}
 
   tags:
     - spark_install

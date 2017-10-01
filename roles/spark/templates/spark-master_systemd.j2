@@ -1,0 +1,17 @@
+[Unit]
+Description=Spark Master Service
+Wants=network.target network-online.target
+After=network.target network-online.target
+
+[Service]
+Type=forking
+User={{ spark.user }}
+Group={{ spark.group }}
+Environment=JAVA_HOME=/usr/local/java8 "SPARK_DAEMON_JAVA_OPTS=-Dspark.deploy.recoveryMode=ZOOKEEPER -Dspark.deploy.zookeeper.url={{ zk_hosts | join(":{0},".format(zk_client_port)) }}:{{ zk_client_port }}"
+WorkingDirectory={{ spark.install_dir }}/{{ spark_release }}-bin-hadoop2.7/work
+ExecStart={{ spark.install_dir }}/{{ spark_release }}-bin-hadoop2.7/sbin/start-master.sh
+ExecStop={{ spark.install_dir }}/{{ spark_release }}-bin-hadoop2.7/sbin/stop-master.sh
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

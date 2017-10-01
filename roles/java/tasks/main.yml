@@ -7,5 +7,13 @@
         name: "{{ java_version }}"
         state: present
 
+    - name: Register JAVA_HOME_stdout
+      shell: "readlink -f '/bin/java' | sed 's/\\/jre\\/bin\\/java//g'"
+      register: JAVA_HOME_stdout
+
+    - name: Set JAVA_HOME
+      set_fact:
+        JAVA_HOME: "{{ JAVA_HOME_stdout.stdout }}"
+
   tags:
     - java_install

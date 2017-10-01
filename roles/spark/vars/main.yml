@@ -6,3 +6,7 @@ spark:
   install_dir: "/apps/spark"
   user: "spark"
   group: "spark"
+  mode: "{{ spark_mode | default('master') }}"
+  master:
+    host: "{{ master_host | default('localhost') }}"
+    port: "{{ master_port | default('7077') }}"

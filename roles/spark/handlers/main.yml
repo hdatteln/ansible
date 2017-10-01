@@ -1,2 +1,8 @@
 ---
 # handlers file for spark
+- name: restart spark-{{ spark.mode }}
+  service:
+    name: spark-{{ spark.mode }}
+    state: restarted
+    enabled: yes
+    daemon_reload: yes

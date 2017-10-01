@@ -8,6 +8,7 @@ fi
 
 # User specific environment and startup programs
 
+export JAVA_HOME={{ JAVA_HOME }}/jre
 export SPARK_HOME={{ spark.install_dir }}/{{ spark_release }}-bin-hadoop2.7
 PATH=$PATH:$HOME/.local/bin:$HOME/bin:{{ spark.install_dir }}/{{ spark_release }}-bin-hadoop2.7/bin
 
