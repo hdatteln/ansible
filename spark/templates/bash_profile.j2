@@ -1,0 +1,14 @@
+# {{ ansible_managed }}
+# .bash_profile
+
+# Get the aliases and functions
+if [ -f ~/.bashrc ]; then
+        . ~/.bashrc
+fi
+
+# User specific environment and startup programs
+
+export SPARK_HOME={{ spark.install_dir }}/{{ spark_release }}-bin-hadoop2.7
+PATH=$PATH:$HOME/.local/bin:$HOME/bin:{{ spark.install_dir }}/{{ spark_release }}-bin-hadoop2.7/bin
+
+export PATH

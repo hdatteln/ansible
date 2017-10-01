@@ -34,12 +34,13 @@
       group: "{{ spark.group }}"
       state: link
 
-  - name: add spark bin dir to path
-    lineinfile:
-      dest: "/etc/environment"
-      state: present
-      regexp: "-bin-hadoop2.7"
-      line: "PATH=$PATH:{{ spark.install_dir }}/{{ spark_release }}-bin-hadoop2.7/bin"
+  - name: Update '{{ spark.user }}' bash_profile
+    template:
+      src: "bash_profile.j2"
+      dest: "/home/{{ spark.user }}/.bash_profile"
+      owner: "{{ spark.user }}"
+      group: "{{ spark.user }}"
+      mode: '0600'
 
   tags:
     - spark_install
