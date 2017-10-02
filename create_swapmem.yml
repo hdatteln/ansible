@@ -5,9 +5,9 @@
   vars:
 
     swapfile: "/swapfile"
-    blocksize: 2048
-    blockcount: 1048576
-    swaptotal_mb: 2047
+    blocksize: 1024
+    blockcount: 3145728
+    swaptotal_mb: 3071
 
   tasks:
 
@@ -16,9 +16,16 @@
         - name: Create and enable swap memory
           command: "{{ item }}"
           with_items:
+            - "swapoff -a"
             - "dd if=/dev/zero of={{ swapfile }} bs={{ blocksize }} count={{ blockcount }}"
             - "mkswap {{ swapfile }}"
             - "swapon {{ swapfile }}"
+
+        - name: Set swap file permissions
+          file:
+            path: "{{ swapfile }}"
+            state: file
+            mode: 0600
 
         - name: Add to fstab
           lineinfile:
