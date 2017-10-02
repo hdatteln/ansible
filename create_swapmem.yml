@@ -1,0 +1,40 @@
+---
+- hosts: all
+  become: yes
+
+  vars:
+
+    swapfile: "/swapfile"
+    blocksize: 2048
+    blockcount: 1048576
+    swaptotal_mb: 2047
+
+  tasks:
+
+    - block:
+
+        - name: Create and enable swap memory
+          command: "{{ item }}"
+          with_items:
+            - "dd if=/dev/zero of={{ swapfile }} bs={{ blocksize }} count={{ blockcount }}"
+            - "mkswap {{ swapfile }}"
+            - "swapon {{ swapfile }}"
+
+        - name: Add to fstab
+          lineinfile:
+             dest: "/etc/fstab"
+             regexp: "{{ swapfile }}"
+             line: "{{ swapfile }} swap swap defaults 0 0"
+             state: present
+             backup: yes
+
+      when: ansible_swaptotal_mb < swaptotal_mb
+      tags:
+        - addswap
+
+    - name: Check swap memory
+      command: "free -m"
+      register: memory
+
+    - name: Display memory
+      debug: msg="{{ memory.stdout_lines }}"
